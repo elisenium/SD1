@@ -4,16 +4,16 @@
  */
 
 public class Consigne3Formats {
-	// A COMPLETER
+	// TODO
 
 	public Consigne3Formats(int[] formats) {
-		// A COMPLETER
+		// TODO
 	}
 
 	// Retourne true s'il reste un casier libre pour le format demande, false sinon.
 	public boolean resteUnCasierLibre(int format)throws IllegalArgumentException {
 
-		// A COMPLETER
+		// TODO
 		return false;
 	}
 
@@ -24,7 +24,7 @@ public class Consigne3Formats {
 	 */
 	public int attribuerCasierLibre(int format, String motDePasse) throws IllegalArgumentException{
 
-		// A COMPLETER
+		// TODO
 		return 0;
 	}
 
@@ -33,7 +33,7 @@ public class Consigne3Formats {
 	 */
 	public boolean libererCasier(int numeroCasier, String motDePasse) {
 
-		// A COMPLETER
+		// TODO
 		return false;
 	}
 
