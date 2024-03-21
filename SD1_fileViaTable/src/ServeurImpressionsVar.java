@@ -1,12 +1,18 @@
+import java.util.ArrayDeque;
+
 public class ServeurImpressionsVar{
 	// TODO
-
+	private ArrayDeque<DemandeImpression>[] tableFilesDAttente;
 
 	/**
 	 * construit une table avec 10 FileAttenteImpression
 	 */
 	public ServeurImpressionsVar() {
 		//TODO
+		tableFilesDAttente = new ArrayDeque[10];
+		for (int i = 0; i < tableFilesDAttente.length; i++) {
+			tableFilesDAttente[i] = new ArrayDeque<DemandeImpression>();
+		}
 
 	}
 
@@ -16,7 +22,7 @@ public class ServeurImpressionsVar{
 	 */
 	public boolean estVide(){
 		//TODO
-		return false;
+		return tableFilesDAttente.length == 0;
 	}
 
 	/**
@@ -26,6 +32,9 @@ public class ServeurImpressionsVar{
 	 */
 	public void ajouter(DemandeImpression demande){
 		//TODO
+		if (demande == null || demande.equals("")) throw new IllegalArgumentException();
+
+		tableFilesDAttente[demande.getPriorite()].add(demande);
 	}
 
 	/**
