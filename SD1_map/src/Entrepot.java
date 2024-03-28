@@ -10,6 +10,7 @@ public class Entrepot {
 
 	private int nombreHangarsLibres;
 	private int nombreHangarsOccupees = 0;
+	private int nombreHangarsHS;
 	private HashMap<Integer, Societe> mapSocietes;
 	private Hangar[] tableauHangars;
 	private LinkedList<String> plaquesVoitures;
@@ -121,6 +122,8 @@ public class Entrepot {
 		int numeroSociete = tableauHangars[numeroHangar].getSociete().getNumeroSociete();
 		mapSocietes.get(numeroSociete).retirerHangar(numeroHangar);
 		tableauHangars[numeroHangar].setSociete(null);
+		nombreHangarsLibres++;
+		nombreHangarsOccupees--;
 		return true;
 	}
 
@@ -151,6 +154,23 @@ public class Entrepot {
 			return false;
 
 		return plaquesVoitures.contains(numPlaque);
+	}
+
+	public Hangar[] getTableauHangars() {
+		return tableauHangars;
+	}
+
+	public boolean mettreHangarHS(int numeroHangar) {
+		if (numeroHangar < 0 || numeroHangar > tableauHangars.length) {
+			return false;
+		}
+		if (!tableauHangars[numeroHangar].estHorsService()) {
+			tableauHangars[numeroHangar].setHorsService(true);
+			nombreHangarsLibres--;
+			nombreHangarsHS++;
+			return true;
+		}
+		return false;
 	}
 
 

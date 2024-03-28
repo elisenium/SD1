@@ -166,6 +166,32 @@ public class GestionEntrepot {
 
     private static void mettreHangarHorsService() {
         //TODO
+        System.out.print("Entrez le numéro du hangar : ");
+        int numeroHangar = scanner.nextInt();
+        Hangar[] tableauHangar = entrepot.getTableauHangars();
+        if (tableauHangar[numeroHangar] != null) {
+            if (tableauHangar[numeroHangar].estHorsService()) {
+                mettreHangarEnService(numeroHangar);
+                return;
+            }
+            System.out.println("Ce hangar appartient déjà à une société");
+            return;
+        } else {
+            tableauHangar[numeroHangar] = new Hangar(numeroHangar);
+            entrepot.mettreHangarHS(numeroHangar);
+        }
+
+
+        System.out.println("Le hangar n°" + numeroHangar + " est désormais hors service");
+
+    }
+
+    private static void mettreHangarEnService(int numeroHangar) {
+        if (!entrepot.mettreHangarHS(numeroHangar)) {
+            entrepot.libererHangar(numeroHangar);
+            System.out.println("Le hangar n° "+ numeroHangar + " n'est plus hors service");
+            return;
+        }
     }
 
 }

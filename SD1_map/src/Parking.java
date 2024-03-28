@@ -23,6 +23,7 @@ public class Parking {
 		if (mapVoitures.containsKey(plaque))
 			return false;
 		mapVoitures.put(plaque, proprietaire);
+		mapVoitures.
 		return true;
 
 	}
