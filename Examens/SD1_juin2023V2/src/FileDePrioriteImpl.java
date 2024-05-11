@@ -19,19 +19,18 @@ public class FileDePrioriteImpl<E> implements FileDePriorite<E>{
 		//Lisez bien les explications sur l'utilisation de la methode compare() dans l'enonce
 
 	}
+
 	private Noeud insere(Noeud noeud, E e) {
 		if (noeud == null)
-			return new Noeud(e);
+			return null;
 		else {
 			if (comparateur.compare(noeud.element, e) < 0) {
 				noeud.gauche = insere(noeud.gauche, e);
-			}
-			else {
+			} else {
 				noeud.droit = insere(noeud.droit, e);
 			}
-			return noeud;
 		}
-
+		return noeud;
 	}
 
 
@@ -39,9 +38,9 @@ public class FileDePrioriteImpl<E> implements FileDePriorite<E>{
 	public E max() {
 		if (racine == null)
 			return null;
-
 		return max(racine);
 		//contrainte : ecrivez cette methode de facon recursive
+
 	}
 
 	private E max(Noeud noeud) {
@@ -103,11 +102,10 @@ public class FileDePrioriteImpl<E> implements FileDePriorite<E>{
 		}
 
 		private void remplirFile (Noeud n) {
-			if (n == null)
-				return;
-			remplirFile(n.gauche);
-			file.add(n.element);
 			remplirFile(n.droit);
+			file.add(n.element);
+			remplirFile(n.gauche);
+
 			//cette methode est une methode recursive !
 		}
 

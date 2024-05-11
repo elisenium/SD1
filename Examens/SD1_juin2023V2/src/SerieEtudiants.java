@@ -1,78 +1,73 @@
 import java.util.HashMap;
 
-public class Equipe {
+public class SerieEtudiants {
 
     private Noeud tete, queue;
-    private HashMap<String, Noeud> mapEquipierNoeud;
+    private HashMap<String, Noeud> mapEtudiantNoeud;
 
     /**
-     * cree une nouvelle liste avec le chef d'equipe en tete
-     * @param chefEquipe
+     * cree une nouvelle liste avec le delegue en tete
+     * @param delegue
      */
-    public Equipe(String chefEquipe) {
-        if(chefEquipe==null||chefEquipe.length()==0)
+    public SerieEtudiants(String delegue) {
+        if(delegue==null||delegue.length()==0)
             throw new IllegalArgumentException();
+        tete = new Noeud(delegue);
+        queue = new Noeud(delegue);
 
-        Noeud noeudChefEquipe = new Noeud(chefEquipe);
-
-        tete = noeudChefEquipe;
-        queue = noeudChefEquipe;
-
-        mapEquipierNoeud = new HashMap<String, Noeud>();
-        mapEquipierNoeud.put(chefEquipe, noeudChefEquipe);
-
+        mapEtudiantNoeud = new HashMap<String, Noeud>();
+        mapEtudiantNoeud.put(delegue, tete);
     }
 
     /**
-     * insere un nouvel equipier dans la liste a condition qu'il ne soit pas deja present
-     * ce nouvel equipier est place directement apres le chef d'equipe
-     * @param nouvelEquipier
+     * insere un nouvel etudiant dans la liste a condition qu'il ne soit pas deja present
+     * ce nouvel etudiant est place directement apres le delegue de la serie
+     * @param nouvelEtudiant
      * @return true si l'ajout a pu etre fait, false sinon
      */
-    public boolean insererApresChef(String nouvelEquipier){
-        if(nouvelEquipier==null||nouvelEquipier.length()==0)
+    public boolean insererApresDelegue(String nouvelEtudiant){
+        if(nouvelEtudiant==null||nouvelEtudiant.length()==0)
             throw new IllegalArgumentException();
-        Noeud noeudNouvelEquipier = new Noeud(nouvelEquipier);
 
-        if (mapEquipierNoeud.containsKey(nouvelEquipier))
+        Noeud noeudNouvelEtudiant = new Noeud(nouvelEtudiant);
+
+        if (mapEtudiantNoeud.containsKey(nouvelEtudiant))
             return false;
 
-        noeudNouvelEquipier.suivant = tete.suivant;
-        noeudNouvelEquipier.precedent = tete;
-        if (mapEquipierNoeud.size() == 1) {
-            queue = noeudNouvelEquipier;
-        } else {
-            tete.suivant.precedent = noeudNouvelEquipier;
+        noeudNouvelEtudiant.suivant = tete.suivant;
+        noeudNouvelEtudiant.precedent = tete;
+
+        if (mapEtudiantNoeud.size() == 1)
+            queue = noeudNouvelEtudiant;
+        else {
+            tete.suivant.precedent = noeudNouvelEtudiant;
         }
-        tete.suivant = noeudNouvelEquipier;
 
-        mapEquipierNoeud.put(nouvelEquipier, noeudNouvelEquipier);
-
+        tete.suivant = noeudNouvelEtudiant;
+        mapEtudiantNoeud.put(nouvelEtudiant, noeudNouvelEtudiant);
         return true;
     }
 
     /**
-     * supprime tous les equipiers de la liste a partir de l'equipier passe en parametre
-     * ne fait aucune suppression si l'equipier est le chef d'equipe ou si l'equipier ne fait pas partie de la liste
-     * @param equipier l'equipier a partir duquel les suppressions sont effectuees
+     * supprime tous les etudiants de la liste a partir de l'etudiant passe en parametre
+     * ne fait aucune suppression si l'etudiant est le delegue de la serie ou si l'etudiant ne fait pas partie de la liste
+     * @param etudiant l'etudiant a partir duquel les suppressions sont effectuees
      * @return true si au moins une suppression a ete faite, false sinon
      */
-    public boolean tronquerAPartir(String equipier){
-        if(equipier==null||equipier.length()==0)
+    public boolean tronquerAPartir(String etudiant){
+        if(etudiant==null||etudiant.length()==0)
             throw new IllegalArgumentException();
 
-        Noeud noeudEquipier = mapEquipierNoeud.get(equipier);
-        if (noeudEquipier == tete) return false;
+        Noeud noeudEtudiant = mapEtudiantNoeud.get(etudiant);
 
-        if (!mapEquipierNoeud.containsValue(noeudEquipier))
-            return false;
+        if (noeudEtudiant == tete) return false;
+        if (!mapEtudiantNoeud.containsValue(noeudEtudiant)) return false;
 
         Noeud baladeur = queue;
 
         while (baladeur != null) {
-            mapEquipierNoeud.remove(baladeur.equipier);
-
-            if (baladeur == noeudEquipier) {
+            mapEtudiantNoeud.remove(baladeur.etudiant);
+            if (baladeur == noeudEtudiant) {
                 if (baladeur.precedent != null) {
                     baladeur.precedent.suivant = null;
                     queue = baladeur.precedent;
@@ -87,26 +82,26 @@ public class Equipe {
     }
 
     /**
-     * renvoie le nombre d'equipiers de l'equipe
-     * @return le nombre d'equipiers de l'equipe
+     * renvoie le nombre d'etudiants de la serie
+     * @return le nombre d'etudiants de la serie
      */
-    public int nombreEquipiers () {
-        return mapEquipierNoeud.size();
+    public int nombreEtudiants () {
+        return mapEtudiantNoeud.size();
     }
 
 
     //A NE PAS MODIFIER
     // pour les tests
-    public Equipe(String[] tableACopier) {
+    public SerieEtudiants(String[] tableACopier) {
         if(tableACopier==null||tableACopier.length==0)
             throw new IllegalArgumentException();
-        mapEquipierNoeud = new HashMap<String, Noeud>();
+        mapEtudiantNoeud = new HashMap<String, Noeud>();
         tete = new Noeud(tableACopier[0]);
-        mapEquipierNoeud.put(tableACopier[0],tete);
+        mapEtudiantNoeud.put(tableACopier[0],tete);
         Noeud prec = tete;
         for (int i = 1; i < tableACopier.length; i++) {
             Noeud nouveauNoeud = new Noeud(tableACopier[i]);
-            mapEquipierNoeud.put(tableACopier[i], nouveauNoeud);
+            mapEtudiantNoeud.put(tableACopier[i], nouveauNoeud);
             nouveauNoeud.precedent = prec;
             prec.suivant = nouveauNoeud;
             prec = nouveauNoeud;
@@ -123,9 +118,9 @@ public class Equipe {
             int cpt=0;
             while (baladeur != null) {
                 if(cpt==0)
-                    aRenvoyer += baladeur.equipier;
+                    aRenvoyer += baladeur.etudiant;
                 else
-                    aRenvoyer += ","+baladeur.equipier;
+                    aRenvoyer += ","+baladeur.etudiant;
                 baladeur = baladeur.suivant;
                 cpt++;
                 if(cpt==100){
@@ -151,9 +146,9 @@ public class Equipe {
             int cpt=0;
             while (baladeur != null) {
                 if(cpt==0)
-                    aRenvoyer += baladeur.equipier;
+                    aRenvoyer += baladeur.etudiant;
                 else
-                    aRenvoyer += ","+baladeur.equipier;
+                    aRenvoyer += ","+baladeur.etudiant;
                 baladeur = baladeur.precedent;
                 cpt++;
                 if(cpt==100){
@@ -168,7 +163,7 @@ public class Equipe {
 
     // Classe interne Noeud
     private class Noeud{
-        private String equipier;
+        private String etudiant;
         private Noeud suivant;
         private Noeud precedent;
 
@@ -176,12 +171,12 @@ public class Equipe {
             this(null, null, null);
         }
 
-        private Noeud(String equipier) {
-            this(null, equipier, null);
+        private Noeud(String etudiant) {
+            this(null, etudiant, null);
         }
 
-        private Noeud(Noeud precedent, String equipier, Noeud suivant) {
-            this.equipier = equipier;
+        private Noeud(Noeud precedent, String etudiant, Noeud suivant) {
+            this.etudiant = etudiant;
             this.suivant = suivant;
             this.precedent = precedent;
         }
