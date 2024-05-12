@@ -66,15 +66,9 @@ public class Cirque {
 		if (ensemblePlacesDemandees.isEmpty() || ensemblePlacesDemandees == null || ensemblePlacesDemandees.equals(""))
 			throw new IllegalArgumentException();
 
-		HashSet<Integer> toutesTablesReservations = new HashSet<Integer>();
-		for (int i = 0; i < tableReservations.length; i++) {
-			toutesTablesReservations.add(i);
-		}
-
-		if (!toutesTablesReservations.containsAll(ensemblePlacesDemandees))
-			return false;
-
 		for (Integer placesDemandee : ensemblePlacesDemandees) {
+			if (placesDemandee < 0 || placesDemandee > tableReservations.length)
+				return false;
 			if (tableReservations[placesDemandee] != null)
 				return false;
 			tableReservations[placesDemandee] = prenom;

@@ -64,15 +64,9 @@ public class FancyFair {
 		if (ensemblePlacesDemandees.isEmpty() || ensemblePlacesDemandees.equals("") || ensemblePlacesDemandees.equals(null))
 			throw new IllegalArgumentException();
 
-		HashSet<Integer> ensembleTableReservations = new HashSet<Integer>();
-		for (int i = 0; i < tableReservations.length; i++) {
-			ensembleTableReservations.add(i);
-		}
-
-		if (!ensembleTableReservations.containsAll(ensemblePlacesDemandees))
-			throw new IllegalArgumentException();
-
 		for (Integer placesDemandee : ensemblePlacesDemandees) {
+			if (placesDemandee > tableReservations.length || placesDemandee < 0)
+				return false;
 			if (tableReservations[placesDemandee] != null)
 				return false;
 			tableReservations[placesDemandee] = prenom;
