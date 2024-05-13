@@ -66,7 +66,7 @@ public class FancyFair {
 
 		for (Integer placesDemandee : ensemblePlacesDemandees) {
 			if (placesDemandee > tableReservations.length || placesDemandee < 0)
-				return false;
+				throw new IllegalArgumentException();
 			if (tableReservations[placesDemandee] != null)
 				return false;
 			tableReservations[placesDemandee] = prenom;

@@ -68,7 +68,7 @@ public class Cirque {
 
 		for (Integer placesDemandee : ensemblePlacesDemandees) {
 			if (placesDemandee < 0 || placesDemandee > tableReservations.length)
-				return false;
+				throw new IllegalArgumentException();
 			if (tableReservations[placesDemandee] != null)
 				return false;
 			tableReservations[placesDemandee] = prenom;
