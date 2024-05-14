@@ -1,9 +1,10 @@
+import java.util.Iterator;
 import java.util.Scanner;
 
 public class GestionBrocante {
 
-	//private static Scanner scanner = new Scanner(System.in);
-	private static MonScanner scanner = new MonScanner("SD1_ex_recapitulatifs/src/brocante.txt");
+//	private static Scanner scanner = new Scanner(System.in);
+	private static MonScanner scanner = new MonScanner("SD1_exRecapitulatifs/brocante.txt");
 
 	private static Brocante brocante;
 
@@ -39,6 +40,8 @@ public class GestionBrocante {
 			System.out.println();
 			System.out.println("1 -> reserver un emplacement");
 			System.out.println("2 -> afficher la brocante");
+			System.out.println("3 -> consulter un exposant via son nom");
+			System.out.println("4 -> lister tous les exposants");
 			System.out.println();
 			System.out.print("Votre choix : ");
 			choix = scanner.nextInt();
@@ -53,9 +56,15 @@ public class GestionBrocante {
 				case 2:
 					afficherTout();
 					break;
+				case 3:
+					consulterExposant();
+					break;
+				case 4:
+					listerTousLesExposants();
+					break;
 			}
 
-		} while (choix >= 1 && choix <= 2);
+		} while (choix >= 1 && choix <= 4);
 
 		brocante.changerPhase();
 		System.out.println();
@@ -69,6 +78,8 @@ public class GestionBrocante {
 			System.out.println();
 			System.out.println("1 -> reserver un emplacement");
 			System.out.println("2 -> afficher la brocante");
+			System.out.println("3 -> consulter un exposant via son nom");
+			System.out.println("4 -> lister tous les exposants");
 			System.out.println();
 			System.out.print("Votre choix : ");
 			choix = scanner.nextInt();
@@ -83,9 +94,15 @@ public class GestionBrocante {
 				case 2:
 					afficherTout();
 					break;
+				case 3:
+					consulterExposant();
+					break;
+				case 4:
+					listerTousLesExposants();
+					break;
 			}
 
-		} while (choix >= 1 && choix <= 2);
+		} while (choix >= 1 && choix <= 4);
 
 		System.out.println("Fin de la brocante!");
 	}
@@ -99,14 +116,18 @@ public class GestionBrocante {
 			return;
 		}
 
-		System.out.print("Entrez l'email : ");
-		String email = scanner.nextLine();
+		Exposant exposant = brocante.getExposant(nom);
+
+		if (exposant.getEmail() == null) {
+			System.out.print("Entrez l'email : ");
+			String email = scanner.nextLine();
+			exposant.setEmail(email);
+		}
 
 		System.out.print("Entrez le numero de l'emplacement : ");
 		int numero = scanner.nextInt();
 		scanner.nextLine();
 
-		Exposant exposant = new Exposant(nom, email);
 		if (brocante.reserver(exposant, numero)) {
 			System.out.println("L'exposant " + nom + " a bien réservé l'emplacement " + numero);
 		} else {
@@ -117,20 +138,20 @@ public class GestionBrocante {
 	private static void reserverPhase2() {
 		System.out.print("Entrez le nom : ");
 		String nom = scanner.nextLine();
+		String email;
 
-		if (!brocante.estUnRiverain(nom)) {
-			System.out.println("Impossible de poursuivre");
-			return;
+		if (!brocante.estUnRiverain(nom) || brocante.getExposant(nom).getEmail() == null) {
+			System.out.print("Entrez l'email : ");
+			email = scanner.nextLine();
+		} else {
+			email = brocante.getExposant(nom).getEmail();
 		}
 
-		System.out.print("Entrez l'email : ");
-		String email = scanner.nextLine();
-
-		brocante.changerPhase();
 		Exposant exposant = new Exposant(nom, email);
+		brocante.changerPhase();
 		int numero = brocante.attribuerAutomatiquementEmplacement(exposant);
 		if (numero != -1) {
-			System.out.println("L'exposant " + nom + " a bien réservé l'emplacement " + numero);
+			System.out.println("L'emplacement " + numero + " a été attribué automatiquement à l'exposant portant le nom \"" + nom + "\"");
 		} else {
 			System.out.println("Réservation échouée");
 		}
@@ -142,5 +163,22 @@ public class GestionBrocante {
 		System.out.println() ;
 		System.out.println(brocante) ;
 		//System.out.println() ;
+	}
+
+	private static void consulterExposant() {
+		System.out.print("Entrez le nom : ");
+		String nom = scanner.nextLine();
+
+		Exposant exposant = brocante.getExposant(nom);
+		if (brocante.estUnExposant(exposant))
+			System.out.println(exposant);
+		else
+			System.out.println("Le nom entré ne fait pas parti des exposants");
+	}
+
+	private static void listerTousLesExposants() {
+		Iterator<Exposant> iterator = brocante.tousLesExposants();
+		while (iterator.hasNext())
+			System.out.println(iterator.next());
 	}
 }

@@ -1,6 +1,7 @@
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class Brocante {
 
@@ -9,6 +10,7 @@ public class Brocante {
     private Emplacement[] tableEmplacements;
     private HashMap<String, Integer> mapRiverains;
     private ArrayDeque<Emplacement> pileEmplacementsLibres;
+    private HashMap<String, Exposant> mapExposants;
 
     //private String tableRiverains[] 
     //inutile, regardez bien les schemas, cette table n'apparait pas !
@@ -25,17 +27,24 @@ public class Brocante {
      * @throws IllegalArgumentException si le nombre d'emplacements est negatif ou nul ou si la table des riverains est null
      */
     public Brocante(int nombreEmplacements, String[] tableRiverains) {
+        if (nombreEmplacements < 1)
+            throw new IllegalArgumentException();
+
         tableEmplacements = new Emplacement[nombreEmplacements];
         mapRiverains = new HashMap<String, Integer>();
         pileEmplacementsLibres = new ArrayDeque<>();
+        mapExposants = new HashMap<String, Exposant>();
 
         for (int i = 0; i < nombreEmplacements; i++) {
             Emplacement emplacement = new Emplacement(i);
             tableEmplacements[i] = emplacement;
-            pileEmplacementsLibres.add(emplacement);
         }
-        for (int i = 1; i <= tableRiverains.length; i++) {
-            mapRiverains.put(tableRiverains[i-1], 0);
+        for (int i = 0; i < tableRiverains.length; i++) {
+            if (tableRiverains.length == 0 || tableRiverains[i] == null || tableRiverains[i].equals(""))
+                throw new IllegalArgumentException();
+            mapRiverains.put(tableRiverains[i], 0);
+            Exposant exposant = new Exposant(tableRiverains[i], null);
+            mapExposants.put(tableRiverains[i], exposant);
         }
     }
 
@@ -52,7 +61,7 @@ public class Brocante {
      * @throws IllegalStateException si on n'est pas en phase 1
      */
     public boolean reserver(Exposant demandeur, int numeroEmplacement) {
-        if (numeroEmplacement < 0 || numeroEmplacement > tableEmplacements.length)
+        if (numeroEmplacement < 0 || numeroEmplacement >= tableEmplacements.length)
             throw new IllegalArgumentException();
         if (phase != 1)
             throw new IllegalStateException();
@@ -66,9 +75,10 @@ public class Brocante {
         if (nombreEmplacements >= 3)
             return false;
 
-        pileEmplacementsLibres.remove(tableEmplacements[numeroEmplacement]);
         tableEmplacements[numeroEmplacement].setExposant(demandeur);
         mapRiverains.put(demandeur.getNom(), ++nombreEmplacements);
+        if (!estUnExposant(demandeur))
+            mapExposants.put(demandeur.getNom(), demandeur);
         return true;
 
         //Attention pour augmenter le nombre d'emplacements
@@ -96,11 +106,14 @@ public class Brocante {
         if (!emplacementLibre())
             return -1;
 
-        Emplacement emplacementAttribue = pileEmplacementsLibres.pop();
+        Emplacement emplacementAttribue = pileEmplacementsLibres.getFirst();
         int numeroEmplacement = emplacementAttribue.getNumero();
+
         tableEmplacements[numeroEmplacement].setExposant(demandeur);
-        Integer nombreEmplacements = mapRiverains.get(demandeur.getNom());
-        mapRiverains.put(demandeur.getNom(), ++nombreEmplacements);
+        pileEmplacementsLibres.pop();
+        if (!estUnExposant(demandeur))
+            mapExposants.put(demandeur.getNom(), demandeur);
+
         return numeroEmplacement;
 
     }
@@ -110,7 +123,14 @@ public class Brocante {
      * si deja en phase 2, rien ne doit etre fait
      */
     public void changerPhase() {
-        if (phase == 1) phase = 2;
+        if (phase == 1) {
+            phase = 2;
+            pileEmplacementsLibres = new ArrayDeque<>();
+            for (Emplacement emplacement : tableEmplacements) {
+                if (tableEmplacements[emplacement.getNumero()].getExposant() == null)
+                    pileEmplacementsLibres.push(new Emplacement(emplacement.getNumero()));
+            }
+        }
         //Pensez a initialiser la pile!!!
 
     }
@@ -124,11 +144,34 @@ public class Brocante {
     }
 
     public boolean estLibre(int numeroEmplacement) {
-        return pileEmplacementsLibres.contains(tableEmplacements[numeroEmplacement]);
+        if (phase == 1)
+            return tableEmplacements[numeroEmplacement].getExposant() == null;
+        return pileEmplacementsLibres.contains(numeroEmplacement);
     }
 
     public boolean emplacementLibre() {
-        return !pileEmplacementsLibres.isEmpty();
+        if (phase == 1) {
+            for (Emplacement emplacement : tableEmplacements) {
+                if (emplacement.getExposant() == null)
+                    return true;
+            }
+            return false;
+        }
+        else {
+            return !pileEmplacementsLibres.isEmpty();
+        }
+    }
+
+    public Exposant getExposant(String nom) {
+        return mapExposants.get(nom);
+    }
+
+    public Iterator<Exposant> tousLesExposants() {
+        return mapExposants.values().iterator();
+    }
+
+    public boolean estUnExposant(Exposant exposant) {
+        return mapExposants.containsValue(exposant);
     }
 
     @Override

@@ -1,14 +1,19 @@
 
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Objects;
 
 public class Exposant {
     private String nom;
     private String email;
+    private LinkedList<Emplacement> listeEmplacements;
 
     public Exposant(String nom, String email) {
         this.nom = nom;
         this.email = email;
+        listeEmplacements = new LinkedList<>();
     }
+
 
     public String getNom() {
         return nom;
@@ -17,6 +22,14 @@ public class Exposant {
     public String getEmail() {
         return email;
     }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    public Iterator<Emplacement> tousLesEmplacements(){
+        return listeEmplacements.iterator();
+    }
+
 
     @Override
     public boolean equals(Object o) {
