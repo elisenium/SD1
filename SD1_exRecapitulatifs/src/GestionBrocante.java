@@ -42,6 +42,7 @@ public class GestionBrocante {
 			System.out.println("2 -> afficher la brocante");
 			System.out.println("3 -> consulter un exposant via son nom");
 			System.out.println("4 -> lister tous les exposants");
+			System.out.println("5 -> libérer un emplacement");
 			System.out.println();
 			System.out.print("Votre choix : ");
 			choix = scanner.nextInt();
@@ -62,9 +63,12 @@ public class GestionBrocante {
 				case 4:
 					listerTousLesExposants();
 					break;
+				case 5:
+					libererEmplacement();
+					break;
 			}
 
-		} while (choix >= 1 && choix <= 4);
+		} while (choix >= 1 && choix <= 5);
 
 		brocante.changerPhase();
 		System.out.println();
@@ -80,6 +84,7 @@ public class GestionBrocante {
 			System.out.println("2 -> afficher la brocante");
 			System.out.println("3 -> consulter un exposant via son nom");
 			System.out.println("4 -> lister tous les exposants");
+			System.out.println("5 -> libérer un emplacement");
 			System.out.println();
 			System.out.print("Votre choix : ");
 			choix = scanner.nextInt();
@@ -100,9 +105,12 @@ public class GestionBrocante {
 				case 4:
 					listerTousLesExposants();
 					break;
+				case 5:
+					libererEmplacement();
+					break;
 			}
 
-		} while (choix >= 1 && choix <= 4);
+		} while (choix >= 1 && choix <= 5);
 
 		System.out.println("Fin de la brocante!");
 	}
@@ -180,5 +188,25 @@ public class GestionBrocante {
 		Iterator<Exposant> iterator = brocante.tousLesExposants();
 		while (iterator.hasNext())
 			System.out.println(iterator.next());
+	}
+
+	private static void libererEmplacement() {
+		System.out.print("Entrez le nom : ");
+		String nom = scanner.nextLine();
+		if (brocante.getExposant(nom) == null) {
+			System.out.println("Ce n'est pas un exposant répertorié");
+			return;
+		}
+		Exposant exposant = brocante.getExposant(nom);
+
+		System.out.print("Entrez le numero de l'emplacement : ");
+		int numero = scanner.nextInt();
+		scanner.nextLine();
+
+		if (brocante.libererEmplacement(exposant, numero)) {
+			System.out.println("L'emplacement " + numero + " est désormais libre");
+			return;
+		}
+		System.out.println("Échec de la libération de l'emplacement");
 	}
 }

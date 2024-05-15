@@ -77,6 +77,7 @@ public class Brocante {
 
         tableEmplacements[numeroEmplacement].setExposant(demandeur);
         mapRiverains.put(demandeur.getNom(), ++nombreEmplacements);
+        demandeur.getListeEmplacements().add(tableEmplacements[numeroEmplacement]);
         if (!estUnExposant(demandeur))
             mapExposants.put(demandeur.getNom(), demandeur);
         return true;
@@ -110,12 +111,45 @@ public class Brocante {
         int numeroEmplacement = emplacementAttribue.getNumero();
 
         tableEmplacements[numeroEmplacement].setExposant(demandeur);
+        if (estUnRiverain(demandeur.getNom())) {
+            int nombreEmplacements = nombreEmplacementsRiverain(demandeur.getNom());
+            mapRiverains.put(demandeur.getNom(), ++nombreEmplacements);
+            System.out.println(donnerMapRiverains());
+        }
         pileEmplacementsLibres.pop();
         if (!estUnExposant(demandeur))
             mapExposants.put(demandeur.getNom(), demandeur);
-
+        demandeur.getListeEmplacements().add(emplacementAttribue);
         return numeroEmplacement;
 
+    }
+
+
+    /**
+     * libère un emplacement détenu par un exposant
+     * @param exposant l'exposant exposant qui possède un emplacement
+     * @param numeroEmplacement le numéro de l'emplacement appartenant à l'exposant
+     * @return true si l'emplacement a été libéré, false sinon
+     * @throws IllegalArgumentException si le numéro de l'emplacement n'existe pas
+     */
+    public boolean libererEmplacement(Exposant exposant, int numeroEmplacement) {
+        if (numeroEmplacement < 0 || numeroEmplacement > tableEmplacements.length)
+            throw new IllegalArgumentException();
+        if (!estUnExposant(exposant))
+            return false;
+
+        Emplacement emplacement = tableEmplacements[numeroEmplacement];
+        if (emplacement.getExposant() != exposant)
+            return false;
+        if (estUnRiverain(exposant.getNom())) {
+            int nombreEmplacements = nombreEmplacementsRiverain(exposant.getNom());
+            mapRiverains.put(exposant.getNom(), --nombreEmplacements);
+        }
+        if (phase == 2)
+            pileEmplacementsLibres.remove(emplacement);
+        exposant.getListeEmplacements().remove(emplacement);
+        tableEmplacements[numeroEmplacement] = new Emplacement(numeroEmplacement);
+        return true;
     }
 
     /**

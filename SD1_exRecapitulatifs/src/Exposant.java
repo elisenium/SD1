@@ -23,6 +23,10 @@ public class Exposant {
         return email;
     }
 
+    public LinkedList<Emplacement> getListeEmplacements() {
+        return listeEmplacements;
+    }
+
     public void setEmail(String email) {
         this.email = email;
     }
