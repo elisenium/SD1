@@ -15,65 +15,60 @@ public class ABRDEntiers implements Iterable<Integer> {
 	}
 
 
-	public int nombrePositifsVI(){
+	public int nombreNegatifsVI(){
 		//CONTRAINTE : cette methode doit etre iterative
 		//Utilisez l'iterateur
-		int nombrePositifs = 0;
+		int nombreNegatifs = 0;
 		for (int entier : this) {
-			if (entier > 0)
-				nombrePositifs++;
-			else break;
-			// OU
-			// return nombrePositifs
+			if (entier < 0)
+				nombreNegatifs++;
+			else
+				break;
 		}
-		return nombrePositifs;
+		return nombreNegatifs;
 	}
 
-	public int nombrePositifsVR(){
+	public int nombreNegatifsVR(){
 		//CONTRAINTE : cette methode doit etre recursive
-		return nombrePositifsVR(racine);
+		return nombreNegatifsVR(racine);
 	}
 
-	private int nombrePositifsVR(NoeudEntier noeudEntier) {
-		if (noeudEntier == null)
+	private int nombreNegatifsVR(NoeudEntier noeud) {
+		if (noeud == null)
 			return 0;
-		if (noeudEntier.entier > 0)
-			return 1 + nombrePositifsVR(noeudEntier.gauche) + nombrePositifsVR(noeudEntier.droit);
-		return nombrePositifsVR(noeudEntier.droit); // pas besoin d'aller vérifier à gauche !!
+		if (noeud.entier < 0)
+			return 1 + nombreNegatifsVR(noeud.gauche) + nombreNegatifsVR(noeud.droit);
+		return nombreNegatifsVR(noeud.gauche); //pas besoin de vérifier le nœud droit !!
 	}
 
-	public boolean auMoins1PositifVI() {
+	public boolean tousPositifsVI() {
 		//CONTRAINTE : cette methode doit etre iterative
 		//Utilisez l'iterateur
 		//N'utilisez pas une methode nombrePositifs()!
 		for (int entier : this) {
-			if (entier > 0)
-				return true;
-			// Si la file commence par des entiers négatifs, le reste est négatif
-			// Si on a parcouru tous les entiers positifs et que l'entier est négatif,
-				// les entiers suivant sont d'office négatif donc on sort de la boucle
-			else break;
-			// OU
-			// return false;
+			if (entier < 0)
+				return false;
+			else return true;
 		}
-		return false;
+		return true;
 	}
 
-	public boolean auMoins1PositifVR() {
+	public boolean tousPositifsVR() {
 		//CONTRAINTE : cette methode doit etre recursive
 		//N'utilisez pas une methode nombrePositifs()!
-		return auMoins1PositifVR(racine);
+		return tousPositifsVR(racine);
 	}
 
-	private boolean auMoins1PositifVR(NoeudEntier noeudEntier) {
+	public boolean tousPositifsVR(NoeudEntier noeudEntier) {
 		if (noeudEntier == null)
-			return false;
-		if (noeudEntier.entier > 0)
 			return true;
-		return auMoins1PositifVR(noeudEntier.droit); // pas besoin d'aller vérifier à gauche !!
+		if (noeudEntier.entier < 0)
+			return false;
+		return tousPositifsVR(noeudEntier.gauche); // pas besoin d'aller vérifier le nœud droit
 	}
 
-	@Override
+
+		@Override
 	public Iterator<Integer> iterator() {
 		return new Iterateur();
 	}
@@ -88,15 +83,22 @@ public class ABRDEntiers implements Iterable<Integer> {
 		}
 
 		private void remplirFile (NoeudEntier n) {
-			if (n == null)
-				return;
-			remplirFile(n.droit);
+			if (n == null) return;
+
+			//TODO
+			// Choisissez la suite d'instructions qui permettra de parcourir les entiers par ordre croissant
+
+			/*
 			fileDEntiers.addLast(n.entier);
 			remplirFile(n.gauche);
+			remplirFile(n.droit);
+			*/
 
 
-			// Mettez les instructions suivantes dans le bon ordre
-			// pour permettre d'iterer les entiers par ordre decroissant
+			remplirFile(n.gauche);
+			fileDEntiers.addLast(n.entier);
+			remplirFile(n.droit);
+
 
 			/*
 			remplirFile(n.gauche);
