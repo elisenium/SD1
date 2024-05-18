@@ -120,12 +120,7 @@ public class Concours {
         // cfr enonce
         //TODO
         Candidat[] classement = Arrays.copyOf(tableCandidats, tableCandidats.length);
-        Arrays.sort(classement, new Comparator<Candidat>() {
-            @Override
-            public int compare(Candidat c1, Candidat c2) {
-                return Integer.compare(c2.getNombreVotes(), c1.getNombreVotes());
-            }
-        });
+        Arrays.sort(classement, new ComparateurCandidats());
         return classement;
     }
 
