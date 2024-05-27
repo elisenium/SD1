@@ -91,15 +91,10 @@ public class FancyFair {
 		if (!appartientAuSpectacle(prenom))
 			throw new IllegalArgumentException();
 
-		int[] placesReserveesEnfant;
 
 		HashSet<Integer> placesEnfant = mapEnfants.get(prenom);
 		int nombrePlaces = placesEnfant.size();
-		if (placesEnfant.isEmpty())
-			placesReserveesEnfant = new int[0];
-		else {
-			placesReserveesEnfant = new int[nombrePlaces];
-		}
+		int[] placesReserveesEnfant = new int[nombrePlaces];
 
 		int j = 0;
 		for (Integer i : placesEnfant) {

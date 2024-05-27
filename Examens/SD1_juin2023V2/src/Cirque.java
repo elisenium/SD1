@@ -97,11 +97,7 @@ public class Cirque {
 
 		HashSet<Integer> placesEnfant = mapEnfants.get(prenom);
 
-		int[] placesReserveesEnfant;
-		if (placesEnfant.isEmpty())
-			placesReserveesEnfant = new int[0];
-		else
-			placesReserveesEnfant = new int[placesEnfant.size()];
+		int[] placesReserveesEnfant = new int[placesEnfant.size()];
 
 		int j = 0;
 		for (Integer i : placesEnfant) {
